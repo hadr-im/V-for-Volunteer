@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const STATS = [
-  { num: "6/12",    label: "Weeks",        suffix: "" },
-  { num: "18",   label: "Min age",      suffix: "+" },
-  { num: "12",  label: "Countries",    suffix: "+" },
-  { num: "100",   label: "Alumni",       suffix: "+" },
+  { num: "6/12", label: "Weeks",     suffix: "" },
+  { num: "18",   label: "Min age",   suffix: "+" },
+  { num: "12",   label: "Countries", suffix: "+" },
+  { num: "100",  label: "Alumni",    suffix: "+" },
 ];
 
 function Countdown() {
@@ -39,10 +39,10 @@ function Countdown() {
           borderRadius: 10,
           padding: "12px 16px",
           textAlign: "center",
-          minWidth: 64,
+          minWidth: 56,
         }}>
           <div style={{
-            fontSize: 28,
+            fontSize: "clamp(20px, 6vw, 28px)",
             fontWeight: 800,
             color: "var(--teal-bright)",
             fontFamily: "var(--font-display)",
@@ -69,6 +69,52 @@ export default function Hero() {
       overflow: "hidden",
       textAlign: "center",
     }}>
+      <style>{`
+        .stats-bar {
+          display: flex;
+          border-radius: 14px;
+          overflow: hidden;
+          border: 0.5px solid var(--border);
+          background: var(--bg-card);
+          width: 100%;
+          max-width: 600px;
+        }
+
+        .stats-bar-item {
+          flex: 1;
+          padding: 20px 16px;
+          text-align: center;
+          border-right: 0.5px solid var(--border);
+          min-width: 0;
+        }
+
+        .stats-bar-item:last-child {
+          border-right: none;
+        }
+
+        .stats-bar-num {
+          font-size: clamp(18px, 5vw, 28px);
+          font-weight: 800;
+          color: var(--teal);
+          font-family: var(--font-display);
+          line-height: 1;
+          white-space: nowrap;
+        }
+
+        .stats-bar-label {
+          font-size: clamp(10px, 2.5vw, 12px);
+          color: var(--text-muted);
+          margin-top: 4px;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 400px) {
+          .stats-bar-item {
+            padding: 14px 8px;
+          }
+        }
+      `}</style>
+
       {/* Background glows */}
       <div className="glow-blob" style={{ width: 500, height: 500, top: -100, right: -100, animationDelay: "0s" }} />
       <div className="glow-blob" style={{ width: 300, height: 300, bottom: 60, left: -80, animationDelay: "2s" }} />
@@ -110,7 +156,7 @@ export default function Hero() {
       {/* Headline */}
       <h1 className="animate-fade-up" style={{
         fontFamily: "var(--font-display)",
-        fontSize: "clamp(44px, 8vw, 80px)",
+        fontSize: "clamp(36px, 8vw, 80px)",
         fontWeight: 800,
         lineHeight: 1.05,
         letterSpacing: "-3px",
@@ -136,7 +182,7 @@ export default function Hero() {
 
       {/* Subtext */}
       <p className="animate-fade-up" style={{
-        fontSize: "clamp(15px, 2vw, 18px)",
+        fontSize: "clamp(14px, 2vw, 18px)",
         color: "var(--text-muted)",
         maxWidth: 520,
         lineHeight: 1.7,
@@ -179,7 +225,6 @@ export default function Hero() {
             Apply Now →
           </button>
         </Link>
-        
       </div>
 
       {/* Countdown */}
@@ -189,31 +234,15 @@ export default function Hero() {
       </div>
 
       {/* Stats bar */}
-      <div className="animate-fade-up" style={{
-        display: "flex",
-        gap: 0,
-        borderRadius: 14,
-        overflow: "hidden",
-        border: "0.5px solid var(--border)",
-        background: "var(--bg-card)",
+      <div className="animate-fade-up stats-bar" style={{
         animationDelay: "0.5s",
         opacity: 0,
         animationFillMode: "forwards",
       }}>
         {STATS.map((s, i) => (
-          <div key={s.label} style={{
-            padding: "20px 32px",
-            textAlign: "center",
-            borderRight: i < STATS.length - 1 ? "0.5px solid var(--border)" : "none",
-          }}>
-            <div style={{
-              fontSize: 28,
-              fontWeight: 800,
-              color: "var(--teal)",
-              fontFamily: "var(--font-display)",
-              lineHeight: 1,
-            }}>{s.num}{s.suffix}</div>
-            <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>{s.label}</div>
+          <div key={s.label} className="stats-bar-item">
+            <div className="stats-bar-num">{s.num}{s.suffix}</div>
+            <div className="stats-bar-label">{s.label}</div>
           </div>
         ))}
       </div>

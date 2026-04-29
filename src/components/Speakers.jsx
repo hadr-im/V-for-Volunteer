@@ -29,7 +29,7 @@ const programs = [
     description: "A structured placement connecting young professionals with host organizations abroad — with a paid stipend, mentorship, and a recognized certificate.",
     pills: ["Stipend included", "Mentorship", "Certificate"],
     areaLabel: "Available regions",
-    areas: ["Egypt", "Turkey", "Romania", "Greece", "Germany","+ others more"],
+    areas: ["Egypt", "Turkey", "Romania", "Greece", "Germany", "+ others more"],
   },
 ];
 
@@ -37,27 +37,50 @@ export default function Programs() {
   const p = programs[0];
 
   return (
-    <section id="programs" style={{ padding: "96px 24px" }}>
+    <section id="programs" style={{ padding: "clamp(48px, 10vw, 96px) 16px" }}>
+      <style>{`
+        .programs-card {
+          width: 100%;
+          max-width: 550px;
+          background: var(--bg-card);
+          border: 0.5px solid var(--border);
+          border-radius: 20px;
+          overflow: hidden;
+          position: relative;
+          transition: border-color 0.3s, transform 0.3s;
+          cursor: default;
+        }
+
+        .programs-card-inner {
+          padding: 36px 36px 32px;
+          text-align: center;
+        }
+
+        .programs-card h3 {
+          font-family: var(--font-display);
+          font-size: clamp(20px, 5vw, 28px);
+          font-weight: 800;
+          margin-bottom: 6px;
+          letter-spacing: -0.5px;
+          text-align: center;
+        }
+
+        @media (max-width: 480px) {
+          .programs-card-inner {
+            padding: 28px 20px 24px;
+          }
+        }
+      `}</style>
+
       <SectionLabel
         tag="Our Programs"
         title="Opportunities that shape your future"
         sub="Structured international programs designed to build real-world skills and global connections."
       />
 
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ display: "flex", justifyContent: "center", padding: "0 8px" }}>
         <div
-          className="reveal reveal-delay-1"
-          style={{
-            width: "50%",
-            maxWidth: 550,
-            background: "var(--bg-card)",
-            border: "0.5px solid var(--border)",
-            borderRadius: 20,
-            overflow: "hidden",
-            position: "relative",
-            transition: "border-color 0.3s, transform 0.3s",
-            cursor: "default",
-          }}
+          className="reveal reveal-delay-1 programs-card"
           onMouseEnter={e => {
             e.currentTarget.style.borderColor = `${p.color}80`;
             e.currentTarget.style.transform = "translateY(-4px)";
@@ -76,7 +99,7 @@ export default function Programs() {
             opacity: 0.8,
           }} />
 
-          <div style={{ padding: "36px 36px 32px", textAlign: "center" }}>
+          <div className="programs-card-inner">
 
             {/* Avatar */}
             <div style={{
@@ -92,20 +115,24 @@ export default function Programs() {
             <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 6 }}>
               {p.flag} {p.country}
             </div>
-            <h3 style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 28, fontWeight: 800,
-              marginBottom: 6, letterSpacing: "-0.5px",
-            }}>{p.name}</h3>
+
+            <h3>{p.name}</h3>
+
             <p style={{ fontSize: 15, color: "var(--teal)", fontWeight: 500, marginBottom: 6 }}>{p.role}</p>
             <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 20 }}>{p.company}</p>
 
-            <p style={{ fontSize: 14, color: "var(--text-muted)", lineHeight: 1.75, marginBottom: 24, maxWidth: 480, margin: "0 auto 24px" }}>
+            <p style={{
+              fontSize: 14, color: "var(--text-muted)", lineHeight: 1.75,
+              marginBottom: 24, maxWidth: 480, margin: "0 auto 24px",
+            }}>
               {p.description}
             </p>
 
             {/* Pills */}
-            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8, marginBottom: 28 }}>
+            <div style={{
+              display: "flex", flexWrap: "wrap",
+              justifyContent: "center", gap: 8, marginBottom: 28,
+            }}>
               {p.pills.map(pill => (
                 <span key={pill} style={{
                   fontSize: 12, padding: "4px 14px", borderRadius: 20,
@@ -117,7 +144,10 @@ export default function Programs() {
 
             <div style={{ borderTop: "0.5px solid var(--border)", margin: "0 0 24px" }} />
 
-            <p style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>
+            <p style={{
+              fontSize: 11, color: "var(--text-muted)",
+              textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12,
+            }}>
               {p.areaLabel}
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>

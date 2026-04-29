@@ -2,13 +2,6 @@ import { useState, useEffect } from "react";
 import { opportunities as mockData } from "../data/content";
 import { SectionLabel } from "./Speakers";
 
-// ─────────────────────────────────────────────────────────────────
-// TO CONNECT GOOGLE SHEETS:
-// 1. Publish your sheet: File → Share → Publish to web → CSV
-// 2. Replace SHEET_CSV_URL with your published CSV link
-// 3. Uncomment the fetchOpportunities function below
-// 4. Remove the line: setOpps(mockData)
-// ─────────────────────────────────────────────────────────────────
 const SHEET_CSV_URL = "YOUR_GOOGLE_SHEETS_CSV_URL_HERE";
 
 async function fetchOpportunities() {
@@ -46,12 +39,6 @@ export default function Opportunities() {
   const [filter, setFilter] = useState("All");
 
   useEffect(() => {
-    // Uncomment below to use real Google Sheets data:
-    // fetchOpportunities()
-    //   .then(data => { setOpps(data); setLoading(false); })
-    //   .catch(() => { setOpps(mockData); setLoading(false); });
-
-    // Using mock data for now:
     setTimeout(() => { setOpps(mockData); setLoading(false); }, 600);
   }, []);
 
@@ -59,7 +46,157 @@ export default function Opportunities() {
   const filtered = filter === "All" ? opps : opps.filter(o => o.type === filter);
 
   return (
-    <section id="opportunities" style={{ padding: "96px 24px" }}>
+    <section id="opportunities" style={{ padding: "clamp(48px, 10vw, 96px) 16px" }}>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .opp-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 16px;
+        }
+
+        @media (max-width: 600px) {
+          .opp-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .filter-tabs {
+          display: flex;
+          gap: 8px;
+          justify-content: center;
+          margin-bottom: 40px;
+          flex-wrap: wrap;
+          padding: 0 4px;
+        }
+
+        .filter-tab {
+          flex-shrink: 0;
+          padding: 8px 16px;
+          border-radius: 100px;
+          font-size: 13px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 360px) {
+          .filter-tab {
+            font-size: 12px;
+            padding: 6px 12px;
+          }
+        }
+
+        .opp-card {
+          background: var(--bg-card);
+          border: 0.5px solid var(--border);
+          border-radius: 14px;
+          padding: 18px 16px;
+          transition: border-color 0.25s, transform 0.25s;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          text-align: left;
+        }
+
+        .opp-card h3 {
+          font-family: var(--font-display);
+          font-size: 15px;
+          font-weight: 700;
+          line-height: 1.3;
+          margin-bottom: 4px;
+          letter-spacing: -0.3px;
+          text-align: left;
+        }
+
+        .opp-card p {
+          text-align: left;
+        }
+
+        .opp-meta {
+          display: flex;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+
+        .opp-tags {
+          display: flex;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+
+        .sheets-note {
+          margin-top: 32px;
+          background: rgba(0,176,155,0.06);
+          border: 0.5px solid rgba(0,176,155,0.2);
+          border-radius: 10px;
+          padding: 12px 16px;
+          display: flex;
+          align-items: flex-start;
+          gap: 10px;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .sheets-note p {
+          font-size: 13px;
+          color: var(--text-muted);
+          line-height: 1.5;
+          word-break: break-word;
+        }
+
+        @media (max-width: 360px) {
+          .sheets-note p {
+            font-size: 12px;
+          }
+        }
+
+        .opp-cta {
+          display: block;
+          text-align: center;
+          background: transparent;
+          color: var(--teal);
+          border: 0.5px solid var(--teal-border);
+          padding: 9px;
+          border-radius: 8px;
+          font-size: 13px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: background 0.2s, color 0.2s;
+          margin-top: auto;
+        }
+
+        .opp-cta:hover {
+          background: var(--teal);
+          color: #fff;
+        }
+
+        .opp-type-badge {
+          background: var(--teal-dim);
+          color: var(--teal);
+          font-size: 11px;
+          font-weight: 600;
+          padding: 3px 10px;
+          border-radius: 20px;
+          letter-spacing: 0.04em;
+          line-height: 1.4;
+          white-space: nowrap;
+          max-width: 160px;
+          text-align: right;
+        }
+
+        @media (max-width: 600px) {
+          .opp-type-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            max-width: 130px;
+          }
+        }
+      `}</style>
+
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <SectionLabel
           tag="Global Opportunities"
@@ -68,27 +205,16 @@ export default function Opportunities() {
         />
 
         {/* Filter tabs */}
-        <div className="reveal" style={{
-          display: "flex",
-          gap: 8,
-          justifyContent: "center",
-          marginBottom: 40,
-          flexWrap: "wrap",
-        }}>
+        <div className="reveal filter-tabs">
           {types.map(t => (
             <button
               key={t}
               onClick={() => setFilter(t)}
+              className="filter-tab"
               style={{
                 background: filter === t ? "var(--teal)" : "var(--bg-card)",
                 color: filter === t ? "#fff" : "var(--text-muted)",
                 border: "0.5px solid " + (filter === t ? "var(--teal)" : "var(--border)"),
-                padding: "8px 20px",
-                borderRadius: 100,
-                fontSize: 13,
-                fontWeight: 500,
-                cursor: "pointer",
-                transition: "all 0.2s",
                 fontFamily: "var(--font-body)",
               }}
             >{t}</button>
@@ -99,33 +225,21 @@ export default function Opportunities() {
         {loading ? (
           <div style={{ textAlign: "center", color: "var(--text-muted)", padding: "60px 0" }}>
             <div style={{
-              width: 36, height: 36, border: "2px solid var(--teal-border)",
-              borderTopColor: "var(--teal)", borderRadius: "50%",
-              animation: "spin 0.8s linear infinite", margin: "0 auto 16px",
+              width: 36, height: 36,
+              border: "2px solid var(--teal-border)",
+              borderTopColor: "var(--teal)",
+              borderRadius: "50%",
+              animation: "spin 0.8s linear infinite",
+              margin: "0 auto 16px",
             }} />
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
             Loading opportunities...
           </div>
         ) : (
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: 16,
-          }}>
+          <div className="opp-grid">
             {filtered.map((o, i) => (
               <div
                 key={o.id}
-                className={`reveal reveal-delay-${(i % 3) + 1}`}
-                style={{
-                  background: "var(--bg-card)",
-                  border: "0.5px solid var(--border)",
-                  borderRadius: 14,
-                  padding: "22px 20px",
-                  transition: "border-color 0.25s, transform 0.25s",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 12,
-                }}
+                className={`reveal reveal-delay-${(i % 3) + 1} opp-card`}
                 onMouseEnter={e => {
                   e.currentTarget.style.borderColor = "rgba(0,176,155,0.45)";
                   e.currentTarget.style.transform = "translateY(-3px)";
@@ -136,45 +250,50 @@ export default function Opportunities() {
                 }}
               >
                 {/* Header */}
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <span style={{ fontSize: 22 }}>{o.flag}</span>
-                  <span style={{
-                    background: "var(--teal-dim)",
-                    color: "var(--teal)",
-                    fontSize: 11,
-                    fontWeight: 600,
-                    padding: "3px 10px",
-                    borderRadius: 20,
-                    letterSpacing: "0.04em",
-                  }}>{TYPE_ICONS[o.type]} {o.type}</span>
+                <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  gap: 8,
+                }}>
+                  <span style={{ fontSize: 22, flexShrink: 0 }}>{o.flag}</span>
+                  <span className="opp-type-badge">
+                    {TYPE_ICONS[o.type]} {o.type}
+                  </span>
                 </div>
 
+                {/* Title + org */}
                 <div>
-                  <h3 style={{
-                    fontFamily: "var(--font-display)",
-                    fontSize: 16,
-                    fontWeight: 700,
-                    lineHeight: 1.3,
-                    marginBottom: 4,
-                    letterSpacing: "-0.3px",
-                  }}>{o.title}</h3>
-                  <p style={{ fontSize: 13, color: "var(--text-muted)" }}>{o.org} · {o.country}</p>
+                  <h3>{o.title}</h3>
+                  <p style={{ fontSize: 13, color: "var(--text-muted)" }}>
+                    {o.org} · {o.country}
+                  </p>
                 </div>
 
                 {/* Meta */}
-                <div style={{ display: "flex", gap: 16 }}>
+                <div className="opp-meta">
                   <div>
-                    <div style={{ fontSize: 10, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Duration</div>
+                    <div style={{
+                      fontSize: 10,
+                      color: "var(--text-faint)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                    }}>Duration</div>
                     <div style={{ fontSize: 13, color: "#fff", marginTop: 2 }}>{o.duration}</div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 10, color: "var(--text-faint)", textTransform: "uppercase", letterSpacing: "0.08em" }}>Deadline</div>
+                    <div style={{
+                      fontSize: 10,
+                      color: "var(--text-faint)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.08em",
+                    }}>Deadline</div>
                     <div style={{ fontSize: 13, color: "#fff", marginTop: 2 }}>{o.deadline}</div>
                   </div>
                 </div>
 
                 {/* Tags */}
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                <div className="opp-tags">
                   {(o.tags || []).map(tag => (
                     <span key={tag} style={{
                       background: `${TAG_COLORS[tag] || "#888"}18`,
@@ -189,47 +308,16 @@ export default function Opportunities() {
                 </div>
 
                 {/* CTA */}
-                <a
-                  href={o.link}
-                  style={{
-                    display: "block",
-                    textAlign: "center",
-                    background: "transparent",
-                    color: "var(--teal)",
-                    border: "0.5px solid var(--teal-border)",
-                    padding: "9px",
-                    borderRadius: 8,
-                    fontSize: 13,
-                    fontWeight: 600,
-                    textDecoration: "none",
-                    transition: "background 0.2s, color 0.2s",
-                    marginTop: "auto",
-                  }}
-                  onMouseEnter={e => { e.target.style.background = "var(--teal)"; e.target.style.color = "#fff"; }}
-                  onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = "var(--teal)"; }}
-                >
-                  Learn More →
-                </a>
+                <a href={o.link} className="opp-cta">Learn More →</a>
               </div>
             ))}
           </div>
         )}
 
         {/* Google Sheets note */}
-        <div className="reveal" style={{
-          marginTop: 32,
-          background: "rgba(0,176,155,0.06)",
-          border: "0.5px solid rgba(0,176,155,0.2)",
-          borderRadius: 10,
-          padding: "12px 20px",
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          maxWidth: 600,
-          margin: "32px auto 0",
-        }}>
-          <span style={{ fontSize: 16 }}>📊</span>
-          <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.5 }}>
+        <div className="reveal sheets-note">
+          <span style={{ fontSize: 16, flexShrink: 0 }}>📊</span>
+          <p>
             Opportunities are synced from a Google Sheet.{" "}
             <span style={{ color: "var(--teal)", fontWeight: 500 }}>
               Replace SHEET_CSV_URL in Opportunities.jsx
