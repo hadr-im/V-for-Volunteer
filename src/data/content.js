@@ -1,4 +1,5 @@
 // ─── SPEAKERS ──────────────────────────────────────────────────────────────
+import aymen from "../images/aymen.jpeg";
 export const speakers = [
   {
     id: 1,
@@ -55,7 +56,7 @@ export const team = [
     name: "Aymen Zouaoui",
     role: "Project Head",
     avatar: "MS",
-    photo: "src/images/aymen.jpeg",
+    photo: aymen,
     phone: "+216 26038745",
     email: "aymen.zouaoui@aiesec.net",
     flag: "🇹🇳",
