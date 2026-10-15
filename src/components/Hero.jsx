@@ -1,250 +1,72 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { event } from "../data/content";
+import SplitText from "./ui/SplitText";
+import ApplyLink from "./ui/ApplyLink";
+import DepartureBoard from "./DepartureBoard";
 
-const STATS = [
-  { num: "6/12", label: "Weeks",     suffix: "" },
-  { num: "18",   label: "Min age",   suffix: "+" },
-  { num: "12",   label: "Countries", suffix: "+" },
-  { num: "100",  label: "Alumni",    suffix: "+" },
-];
+// three.js + three-globe is by far the heaviest thing on the page, and
+// nothing above the fold depends on it — so it streams in after the
+// headline, CTA and board have already painted.
+const GlobeScene = lazy(() => import("./ui/GlobeScene"));
 
-function Countdown() {
-  const deadline = new Date("2026-05-03T11:00:00");
-  const [time, setTime] = useState({ d: 13, h: 10, m: 50, s: 10 });
+const EASE = [0.16, 1, 0.3, 1];
 
-  useEffect(() => {
-    const tick = () => {
-      const diff = deadline - Date.now();
-      if (diff <= 0) return;
-      setTime({
-        d: Math.floor(diff / 86400000),
-        h: Math.floor((diff % 86400000) / 3600000),
-        m: Math.floor((diff % 3600000) / 60000),
-        s: Math.floor((diff % 60000) / 1000),
-      });
-    };
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
+export default function Hero({ play = true }) {
+  const reduced = useReducedMotion();
 
-  const pad = (n) => String(n).padStart(2, "0");
+  const fade = (delay) => ({
+    initial: reduced ? { opacity: 0 } : { opacity: 0, y: 16 },
+    animate: play ? (reduced ? { opacity: 1 } : { opacity: 1, y: 0 }) : {},
+    transition: { duration: 0.8, ease: EASE, delay },
+  });
 
   return (
-    <div style={{ display: "flex", gap: 8, justifyContent: "center", marginBottom: 40 }}>
-      {[["d", "Days"], ["h", "Hours"], ["m", "Min"], ["s", "Sec"]].map(([k, lbl]) => (
-        <div key={k} style={{
-          background: "var(--bg-card)",
-          border: "0.5px solid var(--teal-border)",
-          borderRadius: 10,
-          padding: "12px 16px",
-          textAlign: "center",
-          minWidth: 56,
-        }}>
-          <div style={{
-            fontSize: "clamp(20px, 6vw, 28px)",
-            fontWeight: 800,
-            color: "var(--teal-bright)",
-            fontFamily: "var(--font-display)",
-            fontVariantNumeric: "tabular-nums",
-            lineHeight: 1,
-          }}>{pad(time[k])}</div>
-          <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 4, letterSpacing: "0.08em" }}>{lbl}</div>
+    <section id="top" className="hero">
+      {/* Aurora. Each blob gets its own period and phase so they never
+          sync into a single visible pulse. */}
+      <div
+        className="glow glow--a"
+        style={{ width: "58vw", height: "58vw", maxWidth: 700, maxHeight: 700, top: "-16%", right: "-12%", "--aurora-dur": "26s" }}
+      />
+      {/* Kept clear of the bottom edge. At a negative offset the blob's
+          bright core met the section boundary and `overflow: hidden` cut
+          it into a hard horizontal line against the next section. */}
+      <div
+        className="glow glow--b"
+        style={{ width: "46vw", height: "46vw", maxWidth: 560, maxHeight: 560, bottom: "6%", left: "-14%", "--aurora-dur": "34s", "--aurora-delay": "-6s" }}
+      />
+
+      <div className="shell hero__grid">
+        <div className="hero__copy">
+          <SplitText
+            as="h1"
+            className="display hero__title"
+            lines={["GO BEYOND", "_BORDERS._"]}
+            play={play}
+            delay={0.12}
+            duration={1}
+            nowrap
+          />
+
+          {/* Date, place and the call to action share one line. */}
+          <motion.div className="hero__meta" {...fade(0.7)}>
+            <b>{event.dateLabel}</b>
+            <span>{event.city}</span>
+
+            <ApplyLink />
+          </motion.div>
         </div>
-      ))}
-    </div>
-  );
-}
 
-export default function Hero() {
-  return (
-    <section style={{
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "120px 24px 80px",
-      position: "relative",
-      overflow: "hidden",
-      textAlign: "center",
-    }}>
-      <style>{`
-        .stats-bar {
-          display: flex;
-          border-radius: 14px;
-          overflow: hidden;
-          border: 0.5px solid var(--border);
-          background: var(--bg-card);
-          width: 100%;
-          max-width: 600px;
-        }
+        <motion.div className="hero__globe" {...fade(0.5)}>
+          <Suspense fallback={<span className="globe-fallback">Plotting routes…</span>}>
+            <GlobeScene />
+          </Suspense>
+        </motion.div>
 
-        .stats-bar-item {
-          flex: 1;
-          padding: 20px 16px;
-          text-align: center;
-          border-right: 0.5px solid var(--border);
-          min-width: 0;
-        }
-
-        .stats-bar-item:last-child {
-          border-right: none;
-        }
-
-        .stats-bar-num {
-          font-size: clamp(18px, 5vw, 28px);
-          font-weight: 800;
-          color: var(--teal);
-          font-family: var(--font-display);
-          line-height: 1;
-          white-space: nowrap;
-        }
-
-        .stats-bar-label {
-          font-size: clamp(10px, 2.5vw, 12px);
-          color: var(--text-muted);
-          margin-top: 4px;
-          white-space: nowrap;
-        }
-
-        @media (max-width: 400px) {
-          .stats-bar-item {
-            padding: 14px 8px;
-          }
-        }
-      `}</style>
-
-      {/* Background glows */}
-      <div className="glow-blob" style={{ width: 500, height: 500, top: -100, right: -100, animationDelay: "0s" }} />
-      <div className="glow-blob" style={{ width: 300, height: 300, bottom: 60, left: -80, animationDelay: "2s" }} />
-
-      {/* Grid pattern */}
-      <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: 0.04, pointerEvents: "none" }}>
-        <defs>
-          <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-            <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#00B09B" strokeWidth="0.5" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
-      </svg>
-
-      {/* Badge */}
-      <div className="animate-fade-up" style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 8,
-        background: "rgba(0,176,155,0.1)",
-        border: "0.5px solid rgba(0,176,155,0.35)",
-        borderRadius: 100,
-        padding: "6px 16px",
-        marginBottom: 28,
-        fontSize: 12,
-        fontWeight: 500,
-        color: "var(--teal-bright)",
-        letterSpacing: "0.06em",
-      }}>
-        <span style={{
-          width: 6, height: 6, borderRadius: "50%",
-          background: "var(--teal)",
-          display: "inline-block",
-          boxShadow: "0 0 0 2px rgba(0,176,155,0.3)",
-        }} />
-        AIESEC GLOBAL TALENT PROGRAM · MAY 03, 2026
-      </div>
-
-      {/* Headline */}
-      <h1 className="animate-fade-up" style={{
-        fontFamily: "var(--font-display)",
-        fontSize: "clamp(36px, 8vw, 80px)",
-        fontWeight: 800,
-        lineHeight: 1.05,
-        letterSpacing: "-3px",
-        marginBottom: 24,
-        maxWidth: 820,
-        animationDelay: "0.1s",
-        opacity: 0,
-        animationFillMode: "forwards",
-      }}>
-        Go beyond borders.<br />
-        Get{" "}
-        <span style={{
-          color: "var(--teal)",
-          position: "relative",
-          display: "inline-block",
-        }}>
-          Linked Out.
-          <svg style={{ position: "absolute", bottom: -6, left: 0, width: "100%", height: 4, overflow: "visible" }} viewBox="0 0 200 4">
-            <path d="M0 3 Q100 0 200 3" stroke="var(--teal)" strokeWidth="2" fill="none" opacity="0.5" />
-          </svg>
-        </span>
-      </h1>
-
-      {/* Subtext */}
-      <p className="animate-fade-up" style={{
-        fontSize: "clamp(14px, 2vw, 18px)",
-        color: "var(--text-muted)",
-        maxWidth: 520,
-        lineHeight: 1.7,
-        marginBottom: 40,
-        animationDelay: "0.2s",
-        opacity: 0,
-        animationFillMode: "forwards",
-      }}>
-        A global professional micro-event by AIESEC connecting ambitious young professionals aged 18–30 with real international opportunities, mentors, and industry leaders.
-      </p>
-
-      {/* CTAs */}
-      <div className="animate-fade-up" style={{
-        display: "flex",
-        gap: 12,
-        justifyContent: "center",
-        flexWrap: "wrap",
-        marginBottom: 56,
-        animationDelay: "0.3s",
-        opacity: 0,
-        animationFillMode: "forwards",
-      }}>
-        <Link to="/register">
-          <button style={{
-            background: "var(--teal)",
-            color: "#fff",
-            border: "none",
-            padding: "14px 32px",
-            borderRadius: 10,
-            fontSize: 15,
-            fontWeight: 700,
-            fontFamily: "var(--font-display)",
-            cursor: "pointer",
-            transition: "all 0.2s",
-            letterSpacing: "-0.3px",
-          }}
-            onMouseEnter={e => { e.target.style.background = "var(--teal-bright)"; e.target.style.transform = "translateY(-2px)"; }}
-            onMouseLeave={e => { e.target.style.background = "var(--teal)"; e.target.style.transform = "translateY(0)"; }}
-          >
-            Apply Now →
-          </button>
-        </Link>
-      </div>
-
-      {/* Countdown */}
-      <div className="animate-fade-up" style={{ animationDelay: "0.4s", opacity: 0, animationFillMode: "forwards" }}>
-        <p style={{ fontSize: 11, color: "var(--text-faint)", marginBottom: 12, letterSpacing: "0.1em", textTransform: "uppercase" }}>Event starts in</p>
-        <Countdown />
-      </div>
-
-      {/* Stats bar */}
-      <div className="animate-fade-up stats-bar" style={{
-        animationDelay: "0.5s",
-        opacity: 0,
-        animationFillMode: "forwards",
-      }}>
-        {STATS.map((s, i) => (
-          <div key={s.label} className="stats-bar-item">
-            <div className="stats-bar-num">{s.num}{s.suffix}</div>
-            <div className="stats-bar-label">{s.label}</div>
-          </div>
-        ))}
+        <div className="hero__board">
+          <DepartureBoard play={play} />
+        </div>
       </div>
     </section>
   );
