@@ -20,16 +20,16 @@ import { destinations, globeArcs, globePoints } from "../../data/content";
 extend({ ThreeGlobe });
 
 const THEME = {
-  globe: "#06100F", // sphere body — near-black so land dots carry the form
-  emissive: "#04100E",
+  globe: "#110A08", // sphere body — near-black so land dots carry the form
+  emissive: "#1A0702",
   emissiveIntensity: 0.1,
   shininess: 0.8,
-  land: "rgba(12, 185, 193, 0.78)", // hex-polygon dots
-  atmosphere: "#27DCE4",
+  land: "rgba(248, 90, 64, 0.78)", // hex-polygon dots
+  atmosphere: "#FF8166",
   atmosphereAltitude: 0.17,
-  ambient: "#3FE4EC",
-  key: "#0CB9C1",
-  fill: "#27DCE4",
+  ambient: "#FFA48F",
+  key: "#F85A40",
+  fill: "#FF8166",
 };
 
 const RING_PERIOD_MS = 1600;
@@ -95,7 +95,7 @@ function GlobeMesh({ reduced }) {
     globe
       .ringLat((d) => d.lat)
       .ringLng((d) => d.lng)
-      .ringColor(() => (t) => `rgba(39, 220, 228, ${1 - t})`)
+      .ringColor(() => (t) => `rgba(255, 129, 102, ${1 - t})`)
       .ringMaxRadius(3.4)
       .ringPropagationSpeed(2.2)
       .ringRepeatPeriod(700);

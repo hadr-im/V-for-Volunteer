@@ -47,7 +47,7 @@ export const origin = { city: "TUNIS", flag: "🇹🇳", coords: [36.80, 10.18] 
 /* Built once at module scope so the references stay stable — the globe
    re-runs its setup effects if this data changes identity. */
 
-const ARC_COLORS = ["#27DCE4", "#0CB9C1", "#4DE8EF", "#0E9BA2"];
+const ARC_COLORS = ["#FF8166", "#F85A40", "#FFA48F", "#D14328"];
 
 /* Wider AIESEC network, shown on the globe only.
    These are NOT open placements, so they stay off the departures board —
@@ -68,14 +68,14 @@ export const globePoints = [
     lat: d.coords[0],
     lng: d.coords[1],
     size: 0.45,
-    color: "#27DCE4",
+    color: "#FF8166",
   })),
   // Network nodes sit dimmer and smaller than bookable destinations.
   ...networkNodes.map((n) => ({
     lat: n.coords[0],
     lng: n.coords[1],
     size: 0.3,
-    color: "#0E7A80",
+    color: "#9E3A25",
   })),
 ];
 

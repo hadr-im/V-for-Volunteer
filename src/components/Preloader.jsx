@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
-import Logo from "./ui/Logo";
+import Wordmark from "./ui/Wordmark";
 
 /**
  * Boarding sequence.
@@ -96,7 +96,7 @@ export default function Preloader({ onDone }) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}
       >
-        <Logo name="linked-out" alt="Linked Out" height="clamp(60px, 11vw, 108px)" />
+        <Wordmark height="clamp(56px, 10vw, 100px)" />
       </motion.div>
 
       <motion.div

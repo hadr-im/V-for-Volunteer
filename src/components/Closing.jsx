@@ -45,10 +45,18 @@ export default function Closing() {
           />
         </Reveal>
 
+        {/* Heights are fluid, not fixed: the Global Volunteer lockup is
+            wider than the mark it replaced, and the pair at its full size
+            overran a phone's width. The two clamps hold the 2.3:1 ratio
+            between the marks, so the lockup shrinks as one. */}
         <Reveal className="lockup" delay={0.2}>
-          <Logo name="global-talent" alt="AIESEC Global Talent" height={90} />
+          <Logo
+            name="global-volunteer"
+            alt="AIESEC Global Volunteer"
+            height="clamp(56px, 13vw, 90px)"
+          />
           <span className="lockup__x" aria-hidden="true">×</span>
-          <Logo name="aiesec" alt="AIESEC" height={39} />
+          <Logo name="aiesec" alt="AIESEC" height="clamp(24px, 5.6vw, 39px)" />
         </Reveal>
       </div>
 

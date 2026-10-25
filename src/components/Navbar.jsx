@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { navLinks } from "../data/content";
 import ApplyLink from "./ui/ApplyLink";
-import Logo from "./ui/Logo";
+import Wordmark from "./ui/Wordmark";
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -45,7 +45,7 @@ export default function Navbar() {
       <header className={`nav ${scrolled || open ? "nav--scrolled" : ""}`}>
         <nav className="nav__inner">
           <Link to="/" className="nav__brand" onClick={() => setOpen(false)}>
-            <Logo name="linked-out" alt="Linked Out" height={58} />
+            <Wordmark height={44} />
           </Link>
 
           {isHome && (

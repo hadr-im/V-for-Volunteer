@@ -10,7 +10,7 @@ import {
   YEARS_OF_STUDY,
 } from "../data/formOptions";
 import SplitText from "../components/ui/SplitText";
-import Logo from "../components/ui/Logo";
+import Wordmark from "../components/ui/Wordmark";
 import ApplyLink from "../components/ui/ApplyLink";
 import TextField from "../components/form/TextField";
 import Combobox from "../components/form/Combobox";
@@ -130,7 +130,7 @@ export default function Register() {
       <header className="nav nav--scrolled" style={{ position: "sticky" }}>
         <div className="nav__inner">
           <Link to="/" className="nav__brand">
-            <Logo name="linked-out" alt="Linked Out" height={58} />
+            <Wordmark height={44} />
           </Link>
           <ApplyLink to="/" label="Back home" icon="back" iconFirst className="link-apply--back" />
         </div>
@@ -162,7 +162,7 @@ export default function Register() {
 
               <p className="lede" style={{ margin: "0 auto" }}>
                 Thanks {values.firstName}. We've got your application for {event.name}{" "}
-                {event.edition}. Watch your inbox at <b className="teal">{values.email}</b>.
+                {event.edition}. Watch your inbox at <b className="brand">{values.email}</b>.
               </p>
 
               <Link to="/" className="link-apply link-apply--outline" style={{ marginTop: 10 }}>

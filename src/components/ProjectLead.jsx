@@ -174,7 +174,7 @@ export default function ProjectLead() {
                   duration={0.7}
                 />
 
-                <p className="mono teal" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 22 }}>
+                <p className="mono brand" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: "0.18em", marginBottom: 22 }}>
                   {member.role}
                 </p>
 

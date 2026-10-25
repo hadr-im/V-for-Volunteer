@@ -5,8 +5,8 @@ import { motion, useReducedMotion } from "framer-motion";
  *
  *   <SplitText lines={["GO BEYOND", "_BORDERS._"]} play={ready} />
  *
- * Word markers: *asterisks* fill the word in brand teal, _underscores_
- * render it hollow (teal stroke, no fill). Each line is its own
+ * Word markers: *asterisks* fill the word in the brand colour,
+ * _underscores_ render it hollow (brand stroke, no fill). Each line is its own
  * overflow-hidden row, so words slide up from behind the line above
  * rather than fading in place.
  */
@@ -35,7 +35,7 @@ function parseLine(line) {
 
   while ((match = marker.exec(line)) !== null) {
     if (match.index > cursor) push(line.slice(cursor, match.index), undefined);
-    push(match[2], match[1] === "*" ? "teal" : "text-outline");
+    push(match[2], match[1] === "*" ? "brand" : "text-outline");
     cursor = marker.lastIndex;
   }
   if (cursor < line.length) push(line.slice(cursor), undefined);

@@ -1,22 +1,25 @@
 import aiesec from "../../images/logos/aiesec.png";
-import globalTalent from "../../images/logos/global-talent.png";
-import linkedOut from "../../images/logos/linked-out.svg";
+import globalVolunteer from "../../images/logos/global-volunteer.png";
 
 /**
- * Logo slot.
+ * Logo slot — partner marks only.
  *
  * To add a logo: drop the file in src/images/logos/, import it above, and
  * add it to the map. A name with no entry renders a labelled placeholder
  * rather than a broken image, so unfinished slots are visible but harmless.
  *
+ * Our own mark is not here: it is <Wordmark>, set in type rather than
+ * shipped as a file, so it stays crisp at every size it appears at.
+ *
  * The AIESEC file is pre-processed: the source was black ink with a white
  * matte baked in, which is invisible on a dark background, so it was
  * cropped to the wordmark and recoloured white with the matte removed.
+ * The Global Volunteer file needed none of that — it ships as coral ink
+ * on transparent, which is already the brand colour on our background.
  */
 const LOGOS = {
   aiesec,
-  "global-talent": globalTalent,
-  "linked-out": linkedOut,
+  "global-volunteer": globalVolunteer,
 };
 
 export function hasLogo(name) {
